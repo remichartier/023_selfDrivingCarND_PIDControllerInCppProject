@@ -1,6 +1,8 @@
 #ifndef PID_H
 #define PID_H
 
+enum Param {P, D, I};
+
 class PID {
  public:
   /**
@@ -30,6 +32,15 @@ class PID {
    * @output The total PID error
    */
   double TotalError();
+
+  /**
+   * Get PID parameters value.
+   * @param i The identifier enum P, D or I, of PID coefficients
+   * @output PID coefficient corresponding to identifier i
+   * P, D, or I
+   */
+  double Get(Param i);
+
 
  private:
   /**
