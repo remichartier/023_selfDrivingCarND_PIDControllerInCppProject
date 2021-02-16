@@ -5,6 +5,15 @@
 #include "json.hpp"
 #include "PID.h"
 
+/**
+ * Change history
+ * v0.0 : Initial files
+ * v1.0 : Initialize pid object
+ *        Calculate steering using PID::UpdateControllers() and
+ *          PID::GetPIDController()
+ */
+
+
 // for convenience
 using nlohmann::json;
 using std::string;
@@ -68,7 +77,9 @@ int main() {
           // the velocity (mph) in order to compute the appropriate steering angle.
           
           // Implement first a P controler
-          steer_value = - pid.Get(P) * cte 
+          pid.UpdateControllers(cte);
+          // PROBLEMATIC : TO CHECK ...
+          steer_value = angle + pid.GetPIDController();
             
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value 
