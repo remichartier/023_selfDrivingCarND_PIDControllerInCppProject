@@ -7,7 +7,7 @@
  *        Rename p_error, to p_controller, same for d and i
  *        Rename UpdateError() to UpdateControllers()
  *        Rename TotalError() to GetPIDController()
- *        
+ *        Add prev_cte, int_cte attribute and use it
  */
 
 
@@ -26,6 +26,8 @@ void PID::Init(double Kp_, double Ki_, double Kd_) {
   Kp = Kp_;
   Kd = Kd_;
   Ki = Ki_;
+  prev_cte = 0.0;
+  int_cte = 0.0;
 }
 
 //void PID::UpdateError(double cte) {
@@ -34,11 +36,16 @@ void PID::UpdateControllers(double cte) {
    * TODO: Update PID errors based on cte.
    */
   
+  // cover case of first cte reported (prev_cte still 0)
+  if(prev_cte == 0) prev_cte = cte;
+  
+  int_cte += cte;
+  
   // The PID::UpdateError method calculates proportional,
   // integral and derivative errors
   p_controller = -Kp*cte;
-  i_controller = 0;
-  d_controller = 0;
+  d_controller = -Kd * (cte - prev_cte);
+  i_controller = -Ki * int_cte;
 }
 
 // double PID::TotalError() {

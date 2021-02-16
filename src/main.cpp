@@ -46,7 +46,7 @@ int main() {
   /**
    * TODO: Initialize the pid variable.
    */
-  pid.Init(0.0,0.0,0.0);
+  pid.Init(0.0, 0.0, 0.0);
   
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                      uWS::OpCode opCode) {
@@ -79,7 +79,7 @@ int main() {
           // Implement first a P controler
           pid.UpdateControllers(cte);
           // PROBLEMATIC : TO CHECK ...
-          steer_value = angle + pid.GetPIDController();
+          steer_value = pid.GetPIDController();
             
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value 

@@ -6,7 +6,8 @@
  * v0.0 : Initial files
  * v1.0 : Rename p_error, to p_controller, same for d and i
  *        Rename UpdateError() to UpdateControllers()
- *        Rename TotalError() to GetPIDController() *        
+ *        Rename TotalError() to GetPIDController() 
+ *        add prev_cte, int_cte
  */
 enum Param {P, D, I};
 
@@ -65,6 +66,12 @@ class PID {
   double Kp;
   double Ki;
   double Kd;
+  
+  /**
+   * PID previous_cte, int_cte
+   */ 
+  double prev_cte;
+  double int_cte;
 };
 
 #endif  // PID_H
