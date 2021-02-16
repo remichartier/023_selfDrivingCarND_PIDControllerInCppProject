@@ -11,6 +11,7 @@
  * v1.0 : Initialize pid object
  *        Calculate steering using PID::UpdateControllers() and
  *          PID::GetPIDController()
+ *        Handle case steer_value not within [-1,+1]
  */
 
 
@@ -80,7 +81,14 @@ int main() {
           pid.UpdateControllers(cte);
           // PROBLEMATIC : TO CHECK ...
           steer_value = pid.GetPIDController();
-            
+          
+          // check steer_value between [-1; +1]
+          if((steer_value <-1)||(steer_value >1)){
+            std::cout << "ERROR steer_value outside bounds : " << steer_value << std::endl;
+            if(steer_value <-1) steer_value = -1;
+            if(steer_value >-1) steer_value = +1;
+          }
+          
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value 
                     << std::endl;

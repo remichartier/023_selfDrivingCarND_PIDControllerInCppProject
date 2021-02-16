@@ -68,9 +68,3 @@ double PID::GetPIDController() {
   return(p_controller + d_controller + i_controller);  // TODO: Add your total error calc here!
 }
 
-double PID::Get(Param i) {
-  if(i == P) return Kp;
-  if(i == D) return Kd;
-  if(i == I) return Ki;
-  return 0.0;
-}

@@ -42,14 +42,6 @@ class PID {
    */
   // double PID::TotalError() {
   double GetPIDController();
-    
-  /**
-   * Get PID parameters value.
-   * @param i The identifier enum P, D or I, of PID coefficients
-   * @output PID coefficient corresponding to identifier i
-   * P, D, or I
-   */
-  double Get(Param i);
 
 
  private:
