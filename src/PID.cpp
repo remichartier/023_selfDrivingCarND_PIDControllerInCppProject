@@ -8,6 +8,7 @@
  *        Rename UpdateError() to UpdateControllers()
  *        Rename TotalError() to GetPIDController()
  *        Add prev_cte, int_cte attribute and use it
+ *        Correction : was not updating prev_cte to cte at the end
  */
 
 
@@ -46,6 +47,8 @@ void PID::UpdateControllers(double cte) {
   p_controller = -Kp*cte;
   d_controller = -Kd * (cte - prev_cte);
   i_controller = -Ki * int_cte;
+  
+  prev_cte = cte ;
 }
 
 // double PID::TotalError() {

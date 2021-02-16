@@ -12,6 +12,9 @@
  *        Calculate steering using PID::UpdateControllers() and
  *          PID::GetPIDController()
  *        Handle case steer_value not within [-1,+1]
+ *        Correction : was not updating prev_cte to cte at the end 
+ *          --> Need to retest
+ *        Add throttle global variable, initialize at 0.3
  */
 
 
@@ -44,19 +47,36 @@ int main() {
   uWS::Hub h;
 
   PID pid;
+  double throttle = 0.3;
   /**
    * TODO: Initialize the pid variable.
    */
-  pid.Init(0.08, 0.0, 0.0);
-  //pid.Init(0.08, 3.0, 0.0);
-  //pid.Init(0.225, 4.0, 0.0);
-  //pid.Init(0.225, 4.0, 0.0004);
-  //pid.Init(-0.12, -1.2, 0.0);
-  //pid.Init(0.12, -2.7, 0.0);
-  //pid.Init(0.2, 3.0, 0.0003);
+  // pid.Init(0.08, 0.0, 0.0); //quite good !
+  //pid.Init(0.075, 0.0, 0.0); 31 s
+  //pid.Init(0.05, 0.0, 0.0); //33s
+  //pid.Init(0.04, 0.0, 0.0); //34s
+  pid.Init(0.03, 0.0, 0.0); //34mph go to 1st big turn BEST FOR TIME BEING !
+  // but need retest because it was before the correction with prev_cte ...
+  
+  
+  
+  //pid.Init(0.02, 0.0, 0.0); //34s
+
+  //pid.Init(0.08, 0.1, 0.0); // out !
+  //pid.Init(0.08, 0.05, 0.0); // out !
+  // pid.Init(0.08, 0.05, 0.0); // out !
+  
+  //pid.Init(0.08, 0.00025, 0.0);
+  
+  //pid.Init(0.08, 3.0, 0.0); //completely out ...
+  //pid.Init(0.225, 4.0, 0.0); // completely out ...
+  //pid.Init(0.225, 4.0, 0.0004); // completely out....
+  //pid.Init(-0.12, -1.2, 0.0); // completely out ...
+  //pid.Init(0.12, -2.7, 0.0); // completely out ...
+  //pid.Init(0.2, 3.0, 0.0003); // completely out ...
 
   
-  h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
+  h.onMessage([&pid,&throttle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -102,7 +122,14 @@ int main() {
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = 0.3;
+          
+          // if cte increasing ---> throttle *= 0.9 but bound by 0.1
+          // if cte decreasing --> throttel *= 1.1 but bound by 0.3
+          // msgJson["throttle"] = 0.3;
+          
+          msgJson["throttle"] = throttle;
+          
+          
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
