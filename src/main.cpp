@@ -18,7 +18,7 @@ using namespace std::chrono;
  *          --> Need to retest
  *        Add throttle global variable, initialize at 0.3
  *        Print timer to find out how long we can hold the track
- *        use PID::IsCTEIncreasing() try to adjust speed vs CTE
+ *        add prev_cte, use for throttle control
  */
 
 
@@ -52,6 +52,8 @@ int main() {
 
   PID pid;
   double throttle = 0.3;
+  double prev_cte = 0;
+
   /**
    * TODO: Initialize the pid variable.
    */
@@ -92,7 +94,7 @@ int main() {
   // at this instant use function now() 
   auto start = high_resolution_clock::now(); 
   
-  h.onMessage([&pid,&throttle,&start](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
+  h.onMessage([&pid,&throttle,&start,&prev_cte](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -121,7 +123,10 @@ int main() {
           // the velocity (mph) in order to compute the appropriate steering angle.
           
           // Implement first a P controler
-          pid.UpdateControllers(cte);
+          // cover case of first cte reported (prev_cte still 0)
+          if(prev_cte == 0) prev_cte = cte;
+          
+          pid.UpdateControllers(prev_cte,cte);
           // PROBLEMATIC : TO CHECK ...
           steer_value = pid.GetPIDController();
           
@@ -156,7 +161,7 @@ int main() {
           // if cte increasing ---> throttle *= 0.9 but bound by 0.1
           // if cte decreasing --> throttel *= 1.1 but bound by 0.3
           // msgJson["throttle"] = 0.3;
-          if(pid.IsCTEIncreasing()){
+          if(cte > prev_cte){
             throttle -= throttle/10;
           } else{
             throttle += throttle/10;
@@ -165,6 +170,8 @@ int main() {
           
           msgJson["throttle"] = throttle;
           
+          // record prev_cte for next cycle
+          prev_cte = cte;
           
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;

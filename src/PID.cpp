@@ -7,9 +7,8 @@
  *        Rename p_error, to p_controller, same for d and i
  *        Rename UpdateError() to UpdateControllers()
  *        Rename TotalError() to GetPIDController()
- *        Add prev_cte, int_cte attribute and use it
- *        Correction : was not updating prev_cte to cte at the end
- *        Add PID::IsCTEIncreasing() for throttle control
+ *        Add int_cte attribute and use it
+ *        Change prototype UpdateControllers(), add prev_cte
  */
 
 
@@ -28,18 +27,14 @@ void PID::Init(double Kp_, double Ki_, double Kd_) {
   Kp = Kp_;
   Kd = Kd_;
   Ki = Ki_;
-  prev_cte = 0.0;
   int_cte = 0.0;
 }
 
 //void PID::UpdateError(double cte) {
-void PID::UpdateControllers(double cte) {
+void PID::UpdateControllers(double prev_cte, double cte) {
     /**
    * TODO: Update PID errors based on cte.
    */
-  
-  // cover case of first cte reported (prev_cte still 0)
-  if(prev_cte == 0) prev_cte = cte;
   
   int_cte += cte;
   
@@ -48,8 +43,6 @@ void PID::UpdateControllers(double cte) {
   p_controller = -Kp*cte;
   d_controller = -Kd * (cte - prev_cte);
   i_controller = -Ki * int_cte;
-  
-  prev_cte = cte ;
 }
 
 // double PID::TotalError() {
@@ -70,9 +63,4 @@ double PID::GetPIDController() {
   */
   
   return(p_controller + d_controller + i_controller);  // TODO: Add your total error calc here!
-}
-
-bool PID::IsCTEIncreasing() {
-  // z = (x > y) ? z : y;
-  return((d_controller >=0 ) ? false :true);
 }

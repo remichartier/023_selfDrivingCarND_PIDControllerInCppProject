@@ -7,8 +7,9 @@
  * v1.0 : Rename p_error, to p_controller, same for d and i
  *        Rename UpdateError() to UpdateControllers()
  *        Rename TotalError() to GetPIDController() 
- *        add prev_cte, int_cte
- *        Add PID::IsCTEIncreasing() for throttle control
+ *        add int_cte
+ *        Change prototype UpdateControllers(), add prev_cte
+ *        
  */
 enum Param {P, D, I};
 
@@ -35,7 +36,7 @@ class PID {
    * @param cte The current cross track error
    */
   // void UpdateError(double cte);
-  void UpdateControllers(double cte);
+  void UpdateControllers(double prev_cte, double cte);
 
   /**
    * Calculate the total PID error.
@@ -43,13 +44,6 @@ class PID {
    */
   // double PID::TotalError() {
   double GetPIDController();
-  
-  /**
-   * Indicate if CTE increasing for throttle control
-   * @output bool true or false
-   */
-  bool IsCTEIncreasing();
-
 
  private:
   /**
@@ -69,8 +63,8 @@ class PID {
   /**
    * PID previous_cte, int_cte
    */ 
-  double prev_cte;
   double int_cte;
+    
 };
 
 #endif  // PID_H
