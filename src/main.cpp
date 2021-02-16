@@ -19,6 +19,8 @@ using namespace std::chrono;
  *        Add throttle global variable, initialize at 0.3
  *        Print timer to find out how long we can hold the track
  *        add prev_cte, use for throttle control
+ *        pid.Init(0.03, 0.0001, 0.0); hardly but passed 1st big turn
+ *          after the lake
  */
 
 
@@ -63,7 +65,7 @@ int main() {
   //pid.Init(0.04, 0.0, 0.0); //34s
   
   
-  pid.Init(0.03, 0.0, 0.0); //34mph go to 1st big turn BEST FOR TIME BEING !
+  //pid.Init(0.03, 0.0, 0.0); //34mph go to 1st big turn BEST FOR TIME BEING !
   // but need retest because it was before the correction with prev_cte ...
   // but will be the same because Kd was 0 anyway.
  
@@ -71,7 +73,9 @@ int main() {
  
   // Next : adjust throttle, try to reduce according to error
   // then test, if ok, can try to test Kd parameter.
-  
+  // pid.Init(0.03, 0.03, 0.0); // --> right away to the ditch
+  pid.Init(0.03, 0.0001, 0.0);  // --> improved, pass 1st turn almost crashed.
+  // --> may be need to increase Kd ... try 0.001
   
   
   //pid.Init(0.02, 0.0, 0.0); //34s
@@ -162,9 +166,15 @@ int main() {
           // if cte decreasing --> throttel *= 1.1 but bound by 0.3
           // msgJson["throttle"] = 0.3;
           if(cte > prev_cte){
-            throttle -= throttle/10;
+            //throttle -= throttle/10;
+            throttle = 0;
           } else{
-            throttle += throttle/10;
+            //throttle += throttle/10;
+            if(cte < 2.0){
+              throttle = 0.3;
+            } else{
+              throttle = 0.1;
+            }
             if(throttle > 0.3) throttle = 0.3;
           }
           
