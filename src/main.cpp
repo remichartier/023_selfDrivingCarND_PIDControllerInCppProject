@@ -55,8 +55,18 @@ int main() {
   //pid.Init(0.075, 0.0, 0.0); 31 s
   //pid.Init(0.05, 0.0, 0.0); //33s
   //pid.Init(0.04, 0.0, 0.0); //34s
+  
+  
   pid.Init(0.03, 0.0, 0.0); //34mph go to 1st big turn BEST FOR TIME BEING !
   // but need retest because it was before the correction with prev_cte ...
+  // but will be the same because Kd was 0 anyway.
+ 
+  // pid.Init(0.08, 3.0, 0.0); --> still bad even with prev_cte correction
+ 
+  // Next : adjust throttle, try to reduce according to error
+  // then test, if ok, can try to test Kd parameter.
+  
+  // + need to print time to see until how long I go ....
   
   
   
