@@ -4,6 +4,8 @@
 #include <string>
 #include "json.hpp"
 #include "PID.h"
+#include <chrono>  // to measure timing/duration
+using namespace std::chrono;
 
 /**
  * Change history
@@ -15,6 +17,8 @@
  *        Correction : was not updating prev_cte to cte at the end 
  *          --> Need to retest
  *        Add throttle global variable, initialize at 0.3
+ *        Print timer to find out how long we can hold the track
+ *        use PID::IsCTEIncreasing() try to adjust speed vs CTE
  */
 
 
@@ -66,8 +70,6 @@ int main() {
   // Next : adjust throttle, try to reduce according to error
   // then test, if ok, can try to test Kd parameter.
   
-  // + need to print time to see until how long I go ....
-  
   
   
   //pid.Init(0.02, 0.0, 0.0); //34s
@@ -85,8 +87,12 @@ int main() {
   //pid.Init(0.12, -2.7, 0.0); // completely out ...
   //pid.Init(0.2, 3.0, 0.0003); // completely out ...
 
+  // Use auto keyword to avoid typing long 
+  // type definitions to get the timepoint 
+  // at this instant use function now() 
+  auto start = high_resolution_clock::now(); 
   
-  h.onMessage([&pid,&throttle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
+  h.onMessage([&pid,&throttle,&start](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -119,6 +125,20 @@ int main() {
           // PROBLEMATIC : TO CHECK ...
           steer_value = pid.GetPIDController();
           
+          
+          // After function call, to calculate timing
+          auto stop = high_resolution_clock::now(); 
+          
+          // Subtract stop and start timepoints and 
+          // cast it to required unit. Predefined units 
+          // are nanoseconds, microseconds, milliseconds, 
+          // seconds, minutes, hours. Use duration_cast() 
+          // function. 
+          auto duration = duration_cast<seconds>(stop - start); 
+          // To get the value of duration use the count() 
+          // member function on the duration object 
+          std::cout << "t=" << duration.count() << "; "<< std::endl; 
+          
           // check steer_value between [-1; +1]
           if((steer_value <-1)||(steer_value >1)){
             std::cout << "ERROR steer_value outside bounds : " << steer_value << std::endl;
@@ -136,6 +156,12 @@ int main() {
           // if cte increasing ---> throttle *= 0.9 but bound by 0.1
           // if cte decreasing --> throttel *= 1.1 but bound by 0.3
           // msgJson["throttle"] = 0.3;
+          if(pid.IsCTEIncreasing()){
+            throttle -= throttle/10;
+          } else{
+            throttle += throttle/10;
+            if(throttle > 0.3) throttle = 0.3;
+          }
           
           msgJson["throttle"] = throttle;
           

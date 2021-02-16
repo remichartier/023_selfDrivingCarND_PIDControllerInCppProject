@@ -8,6 +8,7 @@
  *        Rename UpdateError() to UpdateControllers()
  *        Rename TotalError() to GetPIDController() 
  *        add prev_cte, int_cte
+ *        Add PID::IsCTEIncreasing() for throttle control
  */
 enum Param {P, D, I};
 
@@ -42,6 +43,12 @@ class PID {
    */
   // double PID::TotalError() {
   double GetPIDController();
+  
+  /**
+   * Indicate if CTE increasing for throttle control
+   * @output bool true or false
+   */
+  bool IsCTEIncreasing();
 
 
  private:

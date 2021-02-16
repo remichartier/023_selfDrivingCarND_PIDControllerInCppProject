@@ -9,6 +9,7 @@
  *        Rename TotalError() to GetPIDController()
  *        Add prev_cte, int_cte attribute and use it
  *        Correction : was not updating prev_cte to cte at the end
+ *        Add PID::IsCTEIncreasing() for throttle control
  */
 
 
@@ -71,3 +72,7 @@ double PID::GetPIDController() {
   return(p_controller + d_controller + i_controller);  // TODO: Add your total error calc here!
 }
 
+bool PID::IsCTEIncreasing() {
+  // z = (x > y) ? z : y;
+  return((d_controller >=0 ) ? false :true);
+}
