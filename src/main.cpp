@@ -21,6 +21,8 @@ using namespace std::chrono;
  *        add prev_cte, use for throttle control
  *        pid.Init(0.03, 0.0001, 0.0); hardly but passed 1st big turn
  *          after the lake
+ *        pid.Init(0.03, 0.0001, 2.5); go further but stops 
+ *          because CTE always > 2 I think ie stops accelerating
  */
 
 
@@ -74,10 +76,20 @@ int main() {
   // Next : adjust throttle, try to reduce according to error
   // then test, if ok, can try to test Kd parameter.
   // pid.Init(0.03, 0.03, 0.0); // --> right away to the ditch
-  pid.Init(0.03, 0.0001, 0.0);  // --> improved, pass 1st turn almost crashed.
+  
+  // BEST SO FAR
+  //pid.Init(0.03, 0.0001, 0.0);  // --> improved, pass 1st turn almost crashed.
+  
   // --> may be need to increase Kd ... try 0.001
+  //pid.Init(0.03, 0.001, 0.0); // nope ...
+  //pid.Init(0.03, 0.00001, 0.0);
   
+  // TRY on integral / Ki param
+  //pid.Init(0.03, 0.0001, 1.0);  //Good but don't go further
+  // pid.Init(0.03, 0.0001, 2.0);  // BETTER, go further !
+  // pid.Init(0.03, 0.0001, 3.0); // go futher but then stops
   
+  pid.Init(0.03, 0.0001, 2.5);  // same as Ki = 3, stops because always cte > 2
   //pid.Init(0.02, 0.0, 0.0); //34s
 
   //pid.Init(0.08, 0.1, 0.0); // out !
@@ -146,7 +158,7 @@ int main() {
           auto duration = duration_cast<seconds>(stop - start); 
           // To get the value of duration use the count() 
           // member function on the duration object 
-          std::cout << "t=" << duration.count() << "; "<< std::endl; 
+          //std::cout << "t=" << duration.count() << "; "<< std::endl; 
           
           // check steer_value between [-1; +1]
           if((steer_value <-1)||(steer_value >1)){
@@ -156,8 +168,8 @@ int main() {
           }
           
           // DEBUG
-          std::cout << "CTE: " << cte << " Steering Value: " << steer_value 
-                    << std::endl;
+          // std::cout << "CTE: " << cte << " Steering Value: " << steer_value 
+          //           << std::endl;
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
@@ -184,7 +196,10 @@ int main() {
           prev_cte = cte;
           
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
-          std::cout << msg << std::endl;
+          // std::cout << msg << std::endl;
+          std::cout << msg << "; t = " << duration.count() 
+            << "seconds ; CTE =" << cte << std::endl;
+          
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }  // end "telemetry" if
       } else {
