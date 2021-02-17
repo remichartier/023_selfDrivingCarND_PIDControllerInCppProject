@@ -9,9 +9,12 @@
  *        Rename TotalError() to GetPIDController() 
  *        add int_cte
  *        Change prototype UpdateControllers(), add prev_cte
- *        
+ * v1.2   remove enum Param {P, D, I}; unused now
  */
+#if 0
 enum Param {P, D, I};
+#endif // 0
+
 
 class PID {
  public:

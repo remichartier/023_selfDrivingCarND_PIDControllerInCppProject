@@ -5,6 +5,7 @@
 #include "json.hpp"
 #include "PID.h"
 #include <chrono>  // to measure timing/duration
+#include "twiddle.h"
 using namespace std::chrono;
 
 /**
@@ -25,6 +26,8 @@ using namespace std::chrono;
  *          because CTE always > 2 I think ie stops accelerating
  * v1.1   Comment speed control, see how it behaves without it...
  *        Back to Throttle always at 0.3 --> passing 1 laps
+ * v1.2   Try to develop Twigger Algorithm
+ *
  */
 
 
@@ -59,6 +62,7 @@ int main() {
   PID pid;
   double throttle = 0.3;
   double prev_cte = 0;
+  Twiddle twiddle;
 
   /**
    * TODO: Initialize the pid variable.
@@ -91,7 +95,8 @@ int main() {
   // pid.Init(0.03, 0.0001, 2.0);  // BETTER, go further !
   // pid.Init(0.03, 0.0001, 3.0); // go futher but then stops
   
-  pid.Init(0.03, 0.0001, 2.5);  // same as Ki = 3, stops because always cte > 2
+  twiddle.Init(0.03, 0.0001, 2.5);
+  pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);  // same as Ki = 3, stops because always cte > 2
   //pid.Init(0.02, 0.0, 0.0); //34s
 
   //pid.Init(0.08, 0.1, 0.0); // out !
@@ -145,7 +150,6 @@ int main() {
           if(prev_cte == 0) prev_cte = cte;
           
           pid.UpdateControllers(prev_cte,cte);
-          // PROBLEMATIC : TO CHECK ...
           steer_value = pid.GetPIDController();
           
           
@@ -175,7 +179,8 @@ int main() {
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          
+
+#if 0
           // if cte increasing ---> throttle *= 0.9 but bound by 0.1
           // if cte decreasing --> throttel *= 1.1 but bound by 0.3
           
@@ -191,7 +196,7 @@ int main() {
             }
             if(throttle > 0.3) throttle = 0.3;
           }
-          
+#endif // 0          
           msgJson["throttle"] = 0.3;
           //msgJson["throttle"] = throttle;
           
