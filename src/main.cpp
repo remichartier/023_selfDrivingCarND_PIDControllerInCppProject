@@ -23,6 +23,8 @@ using namespace std::chrono;
  *          after the lake
  *        pid.Init(0.03, 0.0001, 2.5); go further but stops 
  *          because CTE always > 2 I think ie stops accelerating
+ * v1.1   Comment speed control, see how it behaves without it...
+ *        Back to Throttle always at 0.3 --> passing 1 laps
  */
 
 
@@ -176,13 +178,13 @@ int main() {
           
           // if cte increasing ---> throttle *= 0.9 but bound by 0.1
           // if cte decreasing --> throttel *= 1.1 but bound by 0.3
-          // msgJson["throttle"] = 0.3;
+          
           if(cte > prev_cte){
             //throttle -= throttle/10;
             throttle = 0;
           } else{
             //throttle += throttle/10;
-            if(cte < 2.0){
+            if(cte < 3.0){
               throttle = 0.3;
             } else{
               throttle = 0.1;
@@ -190,7 +192,8 @@ int main() {
             if(throttle > 0.3) throttle = 0.3;
           }
           
-          msgJson["throttle"] = throttle;
+          msgJson["throttle"] = 0.3;
+          //msgJson["throttle"] = throttle;
           
           // record prev_cte for next cycle
           prev_cte = cte;
