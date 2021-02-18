@@ -6,7 +6,7 @@
 #include "PID.h"
 #include <chrono>  // to measure timing/duration
 #include "twiddle.h"
-using namespace std::chrono;
+using namespace std::chrono; 
 
 /**
  * Change history
@@ -34,6 +34,8 @@ using namespace std::chrono;
 // for convenience
 using nlohmann::json;
 using std::string;
+
+#define USE_TWIDDLE 	1
 
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
@@ -147,7 +149,18 @@ int main() {
           
           // Implement first a P controler
           // cover case of first cte reported (prev_cte still 0)
-          if(prev_cte == 0) prev_cte = cte;
+          if(prev_cte == 0){
+            // ie first time pass here
+            prev_cte = cte;
+          } else{
+            // ie not first time --> use twiddle to test/adjust
+            // PID parameters
+            twiddle.Run(cte);
+            std::cout << "Kp = " << twiddle.p[P] << "; ";
+            std::cout << "Kd = " << twiddle.p[D] << "; ";
+            std::cout << "Ki = " << twiddle.p[I] << std::endl;
+            pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);
+          }
           
           pid.UpdateControllers(prev_cte,cte);
           steer_value = pid.GetPIDController();

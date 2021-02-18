@@ -49,7 +49,7 @@ void Twiddle::Run(double cte) {
   // 1st step (0)
   if(step == 0){
     best_error = cte;
-    p[index] += dp[index]
+    p[index] += dp[index];
     step = 1;
   } // step == 0
   
@@ -68,7 +68,7 @@ void Twiddle::Run(double cte) {
   
   // 3nd step (2)
   if(step == 2){
-    if(cte < best_err){
+    if(cte < best_error){
       best_error = cte;
       dp[index] *= 1.1;
         } else{

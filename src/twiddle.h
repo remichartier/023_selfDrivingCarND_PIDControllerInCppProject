@@ -26,7 +26,7 @@ class Twiddle {
    */
   void Init(double Kp_, double Ki_, double Kd_);
   
-  void Run(double cte)
+  void Run(double cte);
 
  //private:
   /**
@@ -38,8 +38,9 @@ class Twiddle {
    */ 
   double dp[3];    
   
-  Param index;
+  unsigned int index;
   unsigned int step;
+  double best_error;
 };
 
 #endif  // PID_H
