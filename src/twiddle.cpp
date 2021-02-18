@@ -8,6 +8,7 @@ using std::endl;
  * Change history
  * v1.2 : Create file
  *        Implementation twiddler algo (Run())
+ *        Change order parameters Init(double Kp_, double Kd_, double Ki_)
  */
 
 
@@ -19,7 +20,7 @@ Twiddle::Twiddle() {}
 
 Twiddle::~Twiddle() {}
 
-void Twiddle::Init(double Kp_, double Ki_, double Kd_) {
+void Twiddle::Init(double Kp_, double Kd_, double Ki_) {
   /**
    * TODO: Initialize PID coefficients (and errors, if needed)
    */

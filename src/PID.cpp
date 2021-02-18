@@ -9,6 +9,7 @@
  *        Rename TotalError() to GetPIDController()
  *        Add int_cte attribute and use it
  *        Change prototype UpdateControllers(), add prev_cte
+ *        Change order of parameters in Init(double Kp_, double Kd, double Ki_)
  */
 
 
@@ -20,8 +21,9 @@ PID::PID() {}
 
 PID::~PID() {}
 
-void PID::Init(double Kp_, double Ki_, double Kd_) {
-  /**
+//void PID::Init(double Kp_, double Ki_, double Kd_) {
+void PID::Init(double Kp_, double Kd_, double Ki_) {
+    /**
    * TODO: Initialize PID coefficients (and errors, if needed)
    */
   Kp = Kp_;

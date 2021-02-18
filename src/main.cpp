@@ -35,7 +35,7 @@ using namespace std::chrono;
 using nlohmann::json;
 using std::string;
 
-#define USE_TWIDDLE 	1
+#define USE_TWIDDLE 	0
 
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
@@ -79,40 +79,43 @@ int main() {
   // but need retest because it was before the correction with prev_cte ...
   // but will be the same because Kd was 0 anyway.
  
-  // pid.Init(0.08, 3.0, 0.0); --> still bad even with prev_cte correction
+  // pid.Init(0.08, 0.0, 3.0); --> still bad even with prev_cte correction
  
   // Next : adjust throttle, try to reduce according to error
   // then test, if ok, can try to test Kd parameter.
-  // pid.Init(0.03, 0.03, 0.0); // --> right away to the ditch
+  // pid.Init(0.03, 0.0, 0.03); // --> right away to the ditch
   
   // BEST SO FAR
-  //pid.Init(0.03, 0.0001, 0.0);  // --> improved, pass 1st turn almost crashed.
+  //pid.Init(0.03, 0.0, 0.0001);  // --> improved, pass 1st turn almost crashed.
   
   // --> may be need to increase Kd ... try 0.001
-  //pid.Init(0.03, 0.001, 0.0); // nope ...
-  //pid.Init(0.03, 0.00001, 0.0);
+  //pid.Init(0.03, 0.0, 0.001); // nope ...
+  //pid.Init(0.03, 0.0, 0.00001);
   
   // TRY on integral / Ki param
-  //pid.Init(0.03, 0.0001, 1.0);  //Good but don't go further
-  // pid.Init(0.03, 0.0001, 2.0);  // BETTER, go further !
-  // pid.Init(0.03, 0.0001, 3.0); // go futher but then stops
+  //pid.Init(0.03, 1.0, 0.0001);  //Good but don't go further
+  // pid.Init(0.03, 2.0, 0.0001);  // BETTER, go further !
+  // pid.Init(0.03, 3.0, 0.0001); // go futher but then stops
   
-  twiddle.Init(0.03, 0.0001, 2.5);
+  //pid.Init(0.03, 2.5, 0.0001);
+  twiddle.Init(0.03, 2.5, 0.0001);
   pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);  // same as Ki = 3, stops because always cte > 2
+
+  
   //pid.Init(0.02, 0.0, 0.0); //34s
 
-  //pid.Init(0.08, 0.1, 0.0); // out !
-  //pid.Init(0.08, 0.05, 0.0); // out !
-  // pid.Init(0.08, 0.05, 0.0); // out !
+  //pid.Init(0.08 0.0, 0.1,); // out !
+  //pid.Init(0.08, 0.0, 0.05); // out !
+  // pid.Init(0.08, 0.0, 0.05); // out !
   
-  //pid.Init(0.08, 0.00025, 0.0);
+  //pid.Init(0.08, 0.0, 0.00025);
   
-  //pid.Init(0.08, 3.0, 0.0); //completely out ...
-  //pid.Init(0.225, 4.0, 0.0); // completely out ...
-  //pid.Init(0.225, 4.0, 0.0004); // completely out....
-  //pid.Init(-0.12, -1.2, 0.0); // completely out ...
-  //pid.Init(0.12, -2.7, 0.0); // completely out ...
-  //pid.Init(0.2, 3.0, 0.0003); // completely out ...
+  //pid.Init(0.08, 0.0, 3.0); //completely out ...
+  //pid.Init(0.225, 0.0, 4.0); // completely out ...
+  //pid.Init(0.225, 0.0004, 4.0); // completely out....
+  //pid.Init(-0.12, 0.0, -1.2); // completely out ...
+  //pid.Init(0.12, 0.0, -2.7); // completely out ...
+  //pid.Init(0.2, 0.0003, 3.0); // completely out ...
 
   // Use auto keyword to avoid typing long 
   // type definitions to get the timepoint 
@@ -152,7 +155,8 @@ int main() {
           if(prev_cte == 0){
             // ie first time pass here
             prev_cte = cte;
-          } else{
+          } else if(USE_TWIDDLE){
+            
             // ie not first time --> use twiddle to test/adjust
             // PID parameters
             twiddle.Run(cte);

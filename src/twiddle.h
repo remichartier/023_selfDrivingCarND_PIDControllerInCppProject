@@ -4,6 +4,7 @@
 /**
  * Change history
  * v1.2   Create file
+ *        Change order parameters Init(double Kp_, double Kd_, double Ki_)
  */
 
 enum Param {P, D, I};
@@ -24,7 +25,7 @@ class Twiddle {
    * Initialize Twiddle.
    * @param (Kp_, Ki_, Kd_) The initial PID coefficients
    */
-  void Init(double Kp_, double Ki_, double Kd_);
+  void Init(double Kp_, double Kd_, double Ki_);
   
   void Run(double cte);
 

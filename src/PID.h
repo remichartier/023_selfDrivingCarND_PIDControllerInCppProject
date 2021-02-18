@@ -10,10 +10,9 @@
  *        add int_cte
  *        Change prototype UpdateControllers(), add prev_cte
  * v1.2   remove enum Param {P, D, I}; unused now
+ *        Change order of parameters in Init(double Kp_, double Kd, double Ki_)
  */
-#if 0
-enum Param {P, D, I};
-#endif // 0
+
 
 
 class PID {
@@ -32,7 +31,8 @@ class PID {
    * Initialize PID.
    * @param (Kp_, Ki_, Kd_) The initial PID coefficients
    */
-  void Init(double Kp_, double Ki_, double Kd_);
+  // void Init(double Kp_, double Ki_, double Kd_);
+  void Init(double Kp_, double Kd, double Ki_);
 
   /**
    * Update the PID error variables given cross track error.
