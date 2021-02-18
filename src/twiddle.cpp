@@ -10,6 +10,7 @@ using std::endl;
  *        Implementation twiddler algo (Run())
  *        Change order parameters Init(double Kp_, double Kd_, double Ki_)
  *        Modify tolerance for sum(dp) (0.00001 instead of 0.2)
+ *        Correct twiddle method if() --> swithc()/Case:
  */
 
 
@@ -55,38 +56,45 @@ void Twiddle::Run(double cte) {
     return;
   }
   
-  // 1st step (0)
-  if(step == 0){
-    best_error = cte;
-    p[index] += dp[index];
-    step = 1;
-  } // step == 0
-  
-  // 2nd step (1)
-  if(step == 1){
-    if(cte < best_error){
+  switch(step) {
+    case 0:
+      // 1st step (0)
       best_error = cte;
-      dp[index] *= 1.1;
-      index = (index + 1) % 3;
-      step = 0;
-    } else{
-      p[index] -= 2*dp[index];
-      step = 2;
-    }
-  } // if step == 1
-  
-  // 3nd step (2)
-  if(step == 2){
-    if(cte < best_error){
-      best_error = cte;
-      dp[index] *= 1.1;
-    } else{
+      cout << "p[index] += dp[index]; index = " << index << "; p[index] = " << p[index] << "; dp[index] = " << dp[index] << "; "; 
       p[index] += dp[index];
-      dp[index] *= 0.9;
-    }
-    step = 0;
-    index = (index + 1) % 3;
-  } // if step == 2
+      cout << "p[" << index << "] = " << p[index] << endl;
+      step = 1;
+      break;
+    case 1:
+      // 2nd step (1)
+      if(cte < best_error){
+        best_error = cte;
+        dp[index] *= 1.1;
+        index = (index + 1) % 3;
+        step = 0;
+      } else{
+        cout << "p[index] -= 2*dp[index]; index = " << index << "; p[index] = " << p[index] << "; dp[index] = " << dp[index] << "; "; 
+        p[index] -= 2*dp[index];
+        cout << "p[" << index << "] = " << p[index] << endl;
+        step = 2;
+      }
+      break;
+      
+    case 2:
+      // 3nd step (2)
+      if(cte < best_error){
+        best_error = cte;
+        dp[index] *= 1.1;
+      } else{
+        cout << "p[index] += dp[index]; index = " << index << "; p[index] = " << p[index] << "; dp[index] = " << dp[index] << "; "; 
+        p[index] += dp[index];
+        cout << "p[" << index << "] = " << p[index] << endl;
+        dp[index] *= 0.9;
+      }
+      step = 0;
+      index = (index + 1) % 3;
+      break;
+  } // end of switch()
   
   std::cout << "Exit Twiddle::Run() : " ;
   std::cout << "p[P] = " << p[P] << "; ";
