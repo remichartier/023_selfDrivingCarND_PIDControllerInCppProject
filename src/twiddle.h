@@ -25,6 +25,8 @@ class Twiddle {
    * @param (Kp_, Ki_, Kd_) The initial PID coefficients
    */
   void Init(double Kp_, double Ki_, double Kd_);
+  
+  void Run(double cte)
 
  //private:
   /**
@@ -35,6 +37,9 @@ class Twiddle {
    * dp PID Coefficients
    */ 
   double dp[3];    
+  
+  Param index;
+  unsigned int step;
 };
 
 #endif  // PID_H

@@ -117,7 +117,7 @@ int main() {
   // at this instant use function now() 
   auto start = high_resolution_clock::now(); 
   
-  h.onMessage([&pid,&throttle,&start,&prev_cte](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
+  h.onMessage([&pid,&throttle,&start,&prev_cte,&twiddle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
