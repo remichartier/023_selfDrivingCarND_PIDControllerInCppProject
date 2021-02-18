@@ -36,6 +36,7 @@ void Twiddle::Init(double Kp_, double Kd_, double Ki_) {
   
   index = 0; // first rotational param to tune : P
   step = 0;
+  tol = (dp[P] + dp[D] + dp[I]) * 0.2;
 }
 
 void Twiddle::Run(double cte) {
@@ -51,7 +52,7 @@ void Twiddle::Run(double cte) {
   std::cout << "dp[I] = " << dp[I] << std::endl;
   
   // Skip if sum(dp) < tolerance 0.2)
-  if (dp[P] + dp[D] + dp[I] < 0.00001){
+  if (dp[P] + dp[D] + dp[I] < tol){
     cout << "Sum of dp[] < 0.00001 ==> not running Twiddle algo" << endl;
     return;
   }

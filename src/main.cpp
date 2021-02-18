@@ -27,6 +27,8 @@ using namespace std::chrono;
  * v1.1   Comment speed control, see how it behaves without it...
  *        Back to Throttle always at 0.3 --> passing 1 laps
  * v1.2   Try to develop Twigger Algorithm
+ *        Twiddle too unstable
+ *        Best I could find so far : twiddle.Init(0.08, 1, 0.001);
  *
  */
 
@@ -35,7 +37,7 @@ using namespace std::chrono;
 using nlohmann::json;
 using std::string;
 
-#define USE_TWIDDLE 	1
+#define USE_TWIDDLE 	0
 
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
@@ -98,7 +100,22 @@ int main() {
   // pid.Init(0.03, 3.0, 0.0001); // go futher but then stops
   
   //pid.Init(0.03, 2.5, 0.0001);
-  twiddle.Init(0.03, 2.5, 0.0001);
+  // twiddle.Init(0.03, 2.5, 0.0001); // GOOD !
+  
+  //twiddle.Init(0.08, 3, 0.0003);
+  //twiddle.Init(0.08, 2, 0.0000);
+  //twiddle.Init(0.08, 1, 0.0000);
+  //twiddle.Init(0.08, 1, 0.005);
+  //twiddle.Init(0.08, 1, 0.01); BAD
+  twiddle.Init(0.08, 1, 0.001);   // --> best I think, I keep this one.
+
+  //twiddle.Init(0.08, 4, 0.0000);
+ 
+
+  //twiddle.Init(0.225, 4, 0.0004);
+  //twiddle.Init(0.2, 3.0, 0.0003);
+  //twiddle.Init(-0.12, -1.2, 0.0);
+  //twiddle.Init(0.12,-2.7, 0.0);
   pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);  // same as Ki = 3, stops because always cte > 2
 
   

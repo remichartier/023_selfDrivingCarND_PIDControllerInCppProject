@@ -42,6 +42,7 @@ class Twiddle {
   unsigned int index;
   unsigned int step;
   double best_error;
+  double tol;
 };
 
 #endif  // PID_H
