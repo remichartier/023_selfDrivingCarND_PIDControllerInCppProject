@@ -9,6 +9,7 @@ using std::endl;
  * v1.2 : Create file
  *        Implementation twiddler algo (Run())
  *        Change order parameters Init(double Kp_, double Kd_, double Ki_)
+ *        Modify tolerance for sum(dp) (0.00001 instead of 0.2)
  */
 
 
@@ -40,10 +41,17 @@ void Twiddle::Run(double cte) {
   /**
    * TODO: run Twiddle algorithm Cyclicly
    */
+  std::cout << "Enter Twiddle::Run() : " ;
+  std::cout << "p[P] = " << p[P] << "; ";
+  std::cout << "p[D] = " << p[D] << "; ";
+  std::cout << "p[I] = " << p[I] << "; ";
+  std::cout << "dp[P] = " << dp[P] << "; ";
+  std::cout << "dp[D] = " << dp[D] << "; ";
+  std::cout << "dp[I] = " << dp[I] << std::endl;
   
   // Skip if sum(dp) < tolerance 0.2)
-  if (dp[P] + dp[D] + dp[I] < 0.2){
-    cout << "Sum of dp[] < 0.2 ==> not running Twiddle algo" << endl;
+  if (dp[P] + dp[D] + dp[I] < 0.00001){
+    cout << "Sum of dp[] < 0.00001 ==> not running Twiddle algo" << endl;
     return;
   }
   
@@ -72,7 +80,7 @@ void Twiddle::Run(double cte) {
     if(cte < best_error){
       best_error = cte;
       dp[index] *= 1.1;
-        } else{
+    } else{
       p[index] += dp[index];
       dp[index] *= 0.9;
     }
@@ -80,4 +88,11 @@ void Twiddle::Run(double cte) {
     index = (index + 1) % 3;
   } // if step == 2
   
+  std::cout << "Exit Twiddle::Run() : " ;
+  std::cout << "p[P] = " << p[P] << "; ";
+  std::cout << "p[D] = " << p[D] << "; ";
+  std::cout << "p[I] = " << p[I] << "; ";
+  std::cout << "dp[P] = " << dp[P] << "; ";
+  std::cout << "dp[D] = " << dp[D] << "; ";
+  std::cout << "dp[I] = " << dp[I] << std::endl;
 } // end method

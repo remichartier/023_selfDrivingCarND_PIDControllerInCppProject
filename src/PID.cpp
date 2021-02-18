@@ -10,6 +10,8 @@
  *        Add int_cte attribute and use it
  *        Change prototype UpdateControllers(), add prev_cte
  *        Change order of parameters in Init(double Kp_, double Kd, double Ki_)
+ *        Move init of int_cte to constructor instead of Init() as Init() now called
+ *          multiple times
  */
 
 
@@ -17,7 +19,9 @@
  * TODO: Complete the PID class. You may add any additional desired functions.
  */
 
-PID::PID() {}
+PID::PID() {
+  int_cte = 0.0;
+}
 
 PID::~PID() {}
 
@@ -29,7 +33,6 @@ void PID::Init(double Kp_, double Kd_, double Ki_) {
   Kp = Kp_;
   Kd = Kd_;
   Ki = Ki_;
-  int_cte = 0.0;
 }
 
 //void PID::UpdateError(double cte) {
@@ -42,7 +45,7 @@ void PID::UpdateControllers(double prev_cte, double cte) {
   
   // The PID::UpdateError method calculates proportional,
   // integral and derivative errors
-  p_controller = -Kp*cte;
+  p_controller = -Kp * cte;
   d_controller = -Kd * (cte - prev_cte);
   i_controller = -Ki * int_cte;
 }

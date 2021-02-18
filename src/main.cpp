@@ -35,7 +35,7 @@ using namespace std::chrono;
 using nlohmann::json;
 using std::string;
 
-#define USE_TWIDDLE 	0
+#define USE_TWIDDLE 	1
 
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
@@ -160,10 +160,9 @@ int main() {
             // ie not first time --> use twiddle to test/adjust
             // PID parameters
             twiddle.Run(cte);
-            std::cout << "Kp = " << twiddle.p[P] << "; ";
-            std::cout << "Kd = " << twiddle.p[D] << "; ";
-            std::cout << "Ki = " << twiddle.p[I] << std::endl;
+            
             pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);
+            std::cout << "pid.Init(" << twiddle.p[P] << "," << twiddle.p[D] << "," << twiddle.p[I] << ")" << std::endl;
           }
           
           pid.UpdateControllers(prev_cte,cte);
