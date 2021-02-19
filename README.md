@@ -3,6 +3,8 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+Note : for Udacity evaluation, the write-up report is in [write-up.md](write-up.md).
+
 ## Project Introduction
 
 This project revisits the lake race track from the Behavioral Cloning Project. But for this time, goal is to implement a PID controller in C++ to maneuver the vehicle around the track.
