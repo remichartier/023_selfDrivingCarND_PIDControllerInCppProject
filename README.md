@@ -3,7 +3,9 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
-Note : for Udacity evaluation, the write-up report is in [write-up.md](write-up.md).
+Note : 
+- for Udacity evaluation, the write-up report is in [write-up.md](write-up.md).
+- Video example of final result reached : https://youtu.be/L5oF-eXLZpM
 
 ## Project Introduction
 
