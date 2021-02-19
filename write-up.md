@@ -4,6 +4,9 @@ Compilation Criteria | Criteria to meet specifications
 -------------------- | -------------------------------
 Your code should compile. | Code must compile without errors with cmake and make.
 
+- code is compiling/building successfully : 
+![Compilation](/images/005_compilation.png)
+
 
 Implementation Criteria | Criteria to meet specifications
 ----------------------- | -------------------------------
