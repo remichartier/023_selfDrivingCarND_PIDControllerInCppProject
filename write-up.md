@@ -23,7 +23,7 @@ Here is how my algorithm follows what was presented in the lesson :
   double Kd;
 ```
 
-- The `PID` Class includes variables + methods to calculate each P/I/D controller components
+- The `PID` Class includes variables + methods to calculate each P/I/D controller components.
 ```
 // pid.h
 // =====
@@ -57,7 +57,7 @@ void PID::UpdateControllers(double prev_cte, double cte) {
   i_controller = -Ki * int_cte;
 }
 ```
-- The main function and PID class contain instructions and methods to compute PID controller and assign the result to the steering variable in the main function which will send it to simulator to control the car steering.
+- The main function and PID class contain instructions and methods to compute PID controller and assign the result to the steering variable in the main function which will send it to simulator to control the car steering. Note : As I also tried to implement Twiddle algorithm, I first set Kp, Kd, Ki Coefficient through Twiddle object, which attributes are used to initialize the Kp, Kd, Ki attributes for the `pid` object.
 ```
 // main.cpp
 // ========
@@ -65,7 +65,7 @@ void PID::UpdateControllers(double prev_cte, double cte) {
 PID pid;
 double prev_cte = 0;
 ...
-twiddle.Init(0.08, 1, 0.001);   // --> best I think, I keep this one.
+twiddle.Init(0.08, 1.0, 0.001);   // --> best I think, I keep this one.
 pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);  
 ...
           pid.UpdateControllers(prev_cte,cte);
@@ -90,7 +90,7 @@ double PID::GetPIDController() {
   return(p_controller + d_controller + i_controller);  // TODO: Add your total error calc here!
 }
 ```
-
+- So to summarize, i implemented the same base algorithm as presented in the PID lessons, having new steering value being assigned to `p_controller + d_controller + i_controller` and having the following to the 3 controllers : `p_controller = -Kp * cte; d_controller = -Kd * (cte - prev_cte); i_controller = -Ki * int_cte;`
 
 
 Reflection Criteria | Criteria to meet specifications
