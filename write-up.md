@@ -112,8 +112,22 @@ Reflection Criteria | Criteria to meet specifications
 -------------------- | -------------------------------
 Describe how the final hyperparameters were chosen. | Student discusses how they chose the final hyperparameters (P, I, D coefficients). This could have been done through manual tuning, twiddle, SGD, or something else, or a combination!
 
+- Manual Tuning
+  - I started with recommendation I found vie the Mentor Help messages for this project, which were P=0.08, D=3.0. First starting with P=0.08, rest of coefficients at 0. I found it quite good, except that oscillations were driving the car out of the track in about 28s, even reaching the bridge over the lake.
+  - Tested P=0.07, P=0.09, did not find them better. 
+  - So I continued by setting D at 3.0, here I could drive the car roughtly for one lap, but still going out of track at first hard curve after the bridge.
+  - Tried adding the I coefficient, did not help.
+  - Tried just to make sure with many other coefficient values suggested on Mentor's Help Forum, nothing would fix.
+  - That's were I found that the initial code framework provided is tricky, concerning `void PID::Init(double Kp_, double Ki_, double Kd_)` which place Ki_ input parameter before Kd_ parameter, so that's where mix-up happen between values I wanted to set of Kd, Ki, but which were setting Ki,Kd, ie in inversed order.
+  - Once I found those issues, I could progressively reach conclusion that P=0.08, D=1.0, I=0.001 was best working for me, trying +/- 1.0 for D and +/- 0.0005 for I.
+
+- Twiddle algorithm : 
+  - Still the (0.08, 1.0, 0.001) was not looking perfect for me, so I tried implementing Twiddle algorithm, but did not really know when to stop it, so this implementation kind of failed for me, and it did not help me to fine tune better this initial combination of (0.08, 1.0, 0.001).
+  - However it helped me realize that this Twiddle algorithm should only be used on a very limited time/drive length, just to try to tune the parameters, for instance on a straight lane, and not use it continuously. But so far, I could not really find a conditions for stopping this Twiddle algorithm and find optimized parameters. I found on some Mentor's Help Forum that we could restart simulator in order to fine tune parameters using Twiddle, and then use those fine tunings to drive the full track, however I had not yet the chance to implement this way and try it this way. That will be an improvement opportunity for this project later on when I find more time to dedicate to this.
 
 
 Simulation Criteria | Criteria to meet specifications
 -------------------- | -------------------------------
 The vehicle must successfully drive a lap around the track. | No tire may leave the drivable portion of the track surface. The car may not pop up onto ledges or roll over any surfaces that would otherwise be considered unsafe (if humans were in the vehicle).
+
+- cf earlier video link with (P = 0.08, D = 1.0, I = 0.001), the car is able to drive a full lap around the track.
