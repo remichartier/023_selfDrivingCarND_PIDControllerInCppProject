@@ -90,12 +90,20 @@ double PID::GetPIDController() {
   return(p_controller + d_controller + i_controller);  // TODO: Add your total error calc here!
 }
 ```
-- So to summarize, i implemented the same base algorithm as presented in the PID lessons, having new steering value being assigned to `p_controller + d_controller + i_controller` and having the following to the 3 controllers : `p_controller = -Kp * cte; d_controller = -Kd * (cte - prev_cte); i_controller = -Ki * int_cte;`
-
+- So to summarize, i implemented the same base algorithm as presented in the PID lessons, having new steering value being assigned to `p_controller + d_controller + i_controller` and having the following to the 3 controllers : `p_controller = -Kp * cte; d_controller = -Kd * (cte - prev_cte); i_controller = -Ki * int_cte;` which matches with the PID equation. 
 
 Reflection Criteria | Criteria to meet specifications
 -------------------- | -------------------------------
 Describe the effect each of the P, I, D components had in your implementation. | Student describes the effect of the P, I, D component of the PID algorithm in their implementation. Is it what you expected? Visual aids are encouraged, i.e. record of a small video of the car in the simulator and describe what each component is set to.
+
+- My final choices for the P/D/I coefficients were respectively (0.08, 1.0, 0.001) as I found through different tests that they were giving me the best results to steer the car for at least one full lap of the simulator track.
+- Having the P coefficient alone (with D and I coefficent set at 0.0) would never be enough due to big steering oscillations occuring when only having P proportional controller activated. The longuer car would drive, the higher the oscillations would be, and inevitable driving the car out of the track.
+  - Video example : (P = 0.08) TBD.
+- Adding the D Differential coefficient and controller, with a fine tuned value for the D Coefficient, would help driving the car through the entire lap. It would lower the oscillations of the P controller. The steering error corrections would be more 'calculated', rather than be oscillations as it was for the P controller alone. But those corrections would be rather strong if using only the PD controller and would not be comfortable and not be compatible with a smooth ride.
+  - Video example :  (P = 0.08, D = 1.0), TBD.
+- Adding the I coefficient may smoothen a bit the steering changes, but I see it also has an effect of steering or correcting the steering more toward the middle of the road, it the target position / trajectory we expect the car to follow. And therefore it is helping the car to behave better in track curves and turns as it is helping more into steering towards center of lane and not staying at border of the road especially in hard turns in the race track.
+- - Video example :  (P = 0.08, D = 1.0, I = 0.001), TBD.
+That's how I felt the contributions of the coefficients were while testing with different PID coefficient values, most of the impacts of coefficients were expected according to the PID lesson, except that I saw the I coefficient was really finishing the job of keeping the error close to minimum to follow the intented direction / trajectory / expected steering of the car.
 
 
 Reflection Criteria | Criteria to meet specifications
