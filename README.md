@@ -3,6 +3,20 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+## Project Introduction
+
+This project revisits the lake race track from the Behavioral Cloning Project. But for this time, goal is to implement a PID controller in C++ to maneuver the vehicle around the track.
+
+The simulator provides the cross track error (CTE) and the velocity (mph) in order to compute the appropriate steering angle.
+
+The speed limit has been increased from 30 mph to 100 mph. But after using the current simulator, that's not what I found. Maximum speed is actually around 33/35 mph. 
+
+Drive SAFELY as fast as possible! NOTE: you don't have to meet a minimum speed to pass.
+
+Provided to complete this project :
+- GitHub repo with starter code available to be forked.
+- A simulator, download from the releases page of the project repo. Download the most recent version.
+
 ## Dependencies
 
 * cmake >= 3.5
