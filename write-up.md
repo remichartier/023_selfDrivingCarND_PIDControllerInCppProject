@@ -57,7 +57,39 @@ void PID::UpdateControllers(double prev_cte, double cte) {
   i_controller = -Ki * int_cte;
 }
 ```
+- The main function and PID class contain instructions and methods to compute PID controller and assign the result to the steering variable in the main function which will send it to simulator to control the car steering.
+```
+// main.cpp
+// ========
 
+PID pid;
+double prev_cte = 0;
+...
+twiddle.Init(0.08, 1, 0.001);   // --> best I think, I keep this one.
+pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);  
+...
+          pid.UpdateControllers(prev_cte,cte);
+          steer_value = pid.GetPIDController();
+          ...
+          // Keep steer_value between [-1; +1]
+          if((steer_value <-1)||(steer_value >1)){
+            std::cout << "ERROR steer_value outside bounds : " << steer_value << std::endl;
+            if(steer_value <-1) steer_value = -1;
+            if(steer_value >-1) steer_value = +1;
+          }
+
+          // record prev_cte for next cycle
+          prev_cte = cte;
+          
+// pid.cpp
+// =======
+
+// double PID::TotalError() {
+double PID::GetPIDController() {
+  ...
+  return(p_controller + d_controller + i_controller);  // TODO: Add your total error calc here!
+}
+```
 
 
 
