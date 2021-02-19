@@ -94,7 +94,7 @@ int main() {
   // twiddle.Init(0.08, 1, 0.0000);
   // twiddle.Init(0.08, 1, 0.005);
   // twiddle.Init(0.08, 1, 0.01); BAD
-  twiddle.Init(0.08, 1, 0.001);   // --> best I think, I keep this one.
+  twiddle.Init(0.08, 1.0, 0.001);   // --> best I think, I keep this one.
 
   // twiddle.Init(0.08, 4, 0.0000);
   // twiddle.Init(0.225, 4, 0.0004);
@@ -176,7 +176,7 @@ int main() {
           // member function on the duration object 
           //std::cout << "t=" << duration.count() << "; "<< std::endl; 
           
-          // check steer_value between [-1; +1]
+          // keep steer_value between [-1; +1]
           if((steer_value <-1)||(steer_value >1)){
             std::cout << "ERROR steer_value outside bounds : " << steer_value << std::endl;
             if(steer_value <-1) steer_value = -1;
