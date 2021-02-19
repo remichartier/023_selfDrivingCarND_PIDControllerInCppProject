@@ -4,13 +4,61 @@ Compilation Criteria | Criteria to meet specifications
 -------------------- | -------------------------------
 Your code should compile. | Code must compile without errors with cmake and make.
 
-- code is compiling/building successfully : 
-![Compilation](/images/005_compilation.png)
+Code is compiling/building successfully : 
 
+![Compilation](/images/005_compilation.png)
 
 Implementation Criteria | Criteria to meet specifications
 ----------------------- | -------------------------------
 The PID procedure follows what was taught in the lessons.| The base algorithm should follow what's presented in the lessons.
+
+Here is how my algorithm follows what was presented in the lesson : 
+- The `PID` Class defines the PID Coefficients (cf `pid.h` file) for Proportional, Differential and Integral coefficients
+```
+  /**
+   * PID Coefficients
+   */ 
+  double Kp;
+  double Ki;
+  double Kd;
+```
+
+- The `PID` Class includes variables + methods to calculate each P/I/D controller components
+```
+// pid.h
+// =====
+
+  /**
+   * PID Errors / Controller Coefficients
+   */
+  double p_controller;
+  double i_controller;
+  double d_controller;
+  /**
+   * PID int_cte to store sum of all cte accumulated
+   */ 
+  double int_cte;
+
+// pid.cpp
+// =======
+
+// void PID::UpdateError(double cte) {
+void PID::UpdateControllers(double prev_cte, double cte) {
+    /**
+   * TODO: Update PID errors based on cte.
+   */
+  
+  int_cte += cte;
+  
+  // The PID::UpdateError method calculates proportional,
+  // integral and derivative errors
+  p_controller = -Kp * cte;
+  d_controller = -Kd * (cte - prev_cte);
+  i_controller = -Ki * int_cte;
+}
+```
+
+
 
 
 Reflection Criteria | Criteria to meet specifications
