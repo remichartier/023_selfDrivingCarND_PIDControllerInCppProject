@@ -1,4 +1,4 @@
-# Udacity Self-Driving Car Nanodegree : PID Controller Project Write-up
+# Udacity Self-Driving Car Nanodegree : PID Controller Project WRITE-UP
 
 Compilation Criteria | Criteria to meet specifications
 -------------------- | -------------------------------
