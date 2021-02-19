@@ -102,13 +102,16 @@ Describe the effect each of the P, I, D components had in your implementation. |
 - Adding the D Differential coefficient and controller, with a fine tuned value for the D Coefficient, would help driving the car through the entire lap. It would lower the oscillations of the P controller. The steering error corrections would be more 'calculated', rather than be oscillations as it was for the P controller alone. But those corrections would be rather strong if using only the PD controller and would not be comfortable and not be compatible with a smooth ride.
   - Video example :  (P = 0.08, D = 1.0), TBD.
 - Adding the I coefficient may smoothen a bit the steering changes, but I see it also has an effect of steering or correcting the steering more toward the middle of the road, it the target position / trajectory we expect the car to follow. And therefore it is helping the car to behave better in track curves and turns as it is helping more into steering towards center of lane and not staying at border of the road especially in hard turns in the race track.
-- - Video example :  (P = 0.08, D = 1.0, I = 0.001), TBD.
+  - Video example :  (P = 0.08, D = 1.0, I = 0.001), TBD.
+
+
 That's how I felt the contributions of the coefficients were while testing with different PID coefficient values, most of the impacts of coefficients were expected according to the PID lesson, except that I saw the I coefficient was really finishing the job of keeping the error close to minimum to follow the intented direction / trajectory / expected steering of the car.
 
 
 Reflection Criteria | Criteria to meet specifications
 -------------------- | -------------------------------
-Describe how the final hyperparameters were chosen. | Student discusses how they chose the final hyperparameters (P, I, D coefficients). This could be have been done through manual tuning, twiddle, SGD, or something else, or a combination!
+Describe how the final hyperparameters were chosen. | Student discusses how they chose the final hyperparameters (P, I, D coefficients). This could have been done through manual tuning, twiddle, SGD, or something else, or a combination!
+
 
 
 Simulation Criteria | Criteria to meet specifications
