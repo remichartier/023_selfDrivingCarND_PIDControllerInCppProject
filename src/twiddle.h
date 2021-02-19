@@ -23,10 +23,13 @@ class Twiddle {
 
   /**
    * Initialize Twiddle.
-   * @param (Kp_, Ki_, Kd_) The initial PID coefficients
+   * @param (Kp_, Kd_, Ki_) The initial PID coefficients
    */
   void Init(double Kp_, double Kd_, double Ki_);
-  
+  /**
+   * Run Twiddle Algo.
+   * @param (cte) Cross Track Error reported from Simulator
+   */
   void Run(double cte);
 
  //private:

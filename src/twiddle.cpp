@@ -11,21 +11,16 @@ using std::endl;
  *        Change order parameters Init(double Kp_, double Kd_, double Ki_)
  *        Modify tolerance for sum(dp) (0.00001 instead of 0.2)
  *        Correct twiddle method if() --> swithc()/Case:
+ * v1.3   Clean comments/code before final release
  */
 
-
-/**
- * TODO: Complete the PID class. You may add any additional desired functions.
- */
 
 Twiddle::Twiddle() {}
 
 Twiddle::~Twiddle() {}
 
 void Twiddle::Init(double Kp_, double Kd_, double Ki_) {
-  /**
-   * TODO: Initialize PID coefficients (and errors, if needed)
-   */
+ 
   p[P] = Kp_;
   p[D] = Kd_;
   p[I] = Ki_;
@@ -40,9 +35,8 @@ void Twiddle::Init(double Kp_, double Kd_, double Ki_) {
 }
 
 void Twiddle::Run(double cte) {
-  /**
-   * TODO: run Twiddle algorithm Cyclicly
-   */
+
+  /*
   std::cout << "Enter Twiddle::Run() : " ;
   std::cout << "p[P] = " << p[P] << "; ";
   std::cout << "p[D] = " << p[D] << "; ";
@@ -50,6 +44,7 @@ void Twiddle::Run(double cte) {
   std::cout << "dp[P] = " << dp[P] << "; ";
   std::cout << "dp[D] = " << dp[D] << "; ";
   std::cout << "dp[I] = " << dp[I] << std::endl;
+  */
   
   // Skip if sum(dp) < tolerance 0.2)
   if (dp[P] + dp[D] + dp[I] < tol){
@@ -61,9 +56,9 @@ void Twiddle::Run(double cte) {
     case 0:
       // 1st step (0)
       best_error = cte;
-      cout << "p[index] += dp[index]; index = " << index << "; p[index] = " << p[index] << "; dp[index] = " << dp[index] << "; "; 
+      // cout << "p[index] += dp[index]; index = " << index << "; p[index] = " << p[index] << "; dp[index] = " << dp[index] << "; "; 
       p[index] += dp[index];
-      cout << "p[" << index << "] = " << p[index] << endl;
+      // cout << "p[" << index << "] = " << p[index] << endl;
       step = 1;
       break;
     case 1:
@@ -74,9 +69,9 @@ void Twiddle::Run(double cte) {
         index = (index + 1) % 3;
         step = 0;
       } else{
-        cout << "p[index] -= 2*dp[index]; index = " << index << "; p[index] = " << p[index] << "; dp[index] = " << dp[index] << "; "; 
+        // cout << "p[index] -= 2*dp[index]; index = " << index << "; p[index] = " << p[index] << "; dp[index] = " << dp[index] << "; "; 
         p[index] -= 2*dp[index];
-        cout << "p[" << index << "] = " << p[index] << endl;
+        // cout << "p[" << index << "] = " << p[index] << endl;
         step = 2;
       }
       break;
@@ -87,9 +82,9 @@ void Twiddle::Run(double cte) {
         best_error = cte;
         dp[index] *= 1.1;
       } else{
-        cout << "p[index] += dp[index]; index = " << index << "; p[index] = " << p[index] << "; dp[index] = " << dp[index] << "; "; 
+        // cout << "p[index] += dp[index]; index = " << index << "; p[index] = " << p[index] << "; dp[index] = " << dp[index] << "; "; 
         p[index] += dp[index];
-        cout << "p[" << index << "] = " << p[index] << endl;
+        // cout << "p[" << index << "] = " << p[index] << endl;
         dp[index] *= 0.9;
       }
       step = 0;
@@ -97,6 +92,7 @@ void Twiddle::Run(double cte) {
       break;
   } // end of switch()
   
+  /*
   std::cout << "Exit Twiddle::Run() : " ;
   std::cout << "p[P] = " << p[P] << "; ";
   std::cout << "p[D] = " << p[D] << "; ";
@@ -104,4 +100,5 @@ void Twiddle::Run(double cte) {
   std::cout << "dp[P] = " << dp[P] << "; ";
   std::cout << "dp[D] = " << dp[D] << "; ";
   std::cout << "dp[I] = " << dp[I] << std::endl;
+  */
 } // end method
