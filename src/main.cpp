@@ -94,6 +94,7 @@ int main() {
   // twiddle.Init(0.08, 1, 0.0000);
   // twiddle.Init(0.08, 1, 0.005);
   // twiddle.Init(0.08, 1, 0.01); BAD
+  
   twiddle.Init(0.08, 1.0, 0.001);   // --> best I think, I keep this one.
 
   // twiddle.Init(0.08, 4, 0.0000);
