@@ -25,7 +25,7 @@ PID::PID() {
 
 PID::~PID() {}
 
-//void PID::Init(double Kp_, double Ki_, double Kd_) {
+// void PID::Init(double Kp_, double Ki_, double Kd_) {
 void PID::Init(double Kp_, double Kd_, double Ki_) {
     /**
    * TODO: Initialize PID coefficients (and errors, if needed)
@@ -35,7 +35,7 @@ void PID::Init(double Kp_, double Kd_, double Ki_) {
   Ki = Ki_;
 }
 
-//void PID::UpdateError(double cte) {
+// void PID::UpdateError(double cte) {
 void PID::UpdateControllers(double prev_cte, double cte) {
     /**
    * TODO: Update PID errors based on cte.

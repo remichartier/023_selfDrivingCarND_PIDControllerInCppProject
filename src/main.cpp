@@ -29,7 +29,8 @@ using namespace std::chrono;
  * v1.2   Try to develop Twigger Algorithm
  *        Twiddle too unstable
  *        Best I could find so far : twiddle.Init(0.08, 1, 0.001);
- *
+ * v1.3   Clean code + comments
+ *        Remove throttle variable as not used anymore
  */
 
 
@@ -64,7 +65,6 @@ int main() {
   uWS::Hub h;
 
   PID pid;
-  double throttle = 0.3;
   double prev_cte = 0;
   Twiddle twiddle;
 
@@ -72,74 +72,58 @@ int main() {
    * TODO: Initialize the pid variable.
    */
   // pid.Init(0.08, 0.0, 0.0); //quite good !
-  //pid.Init(0.075, 0.0, 0.0); 31 s
-  //pid.Init(0.05, 0.0, 0.0); //33s
-  //pid.Init(0.04, 0.0, 0.0); //34s
-  
-  
-  //pid.Init(0.03, 0.0, 0.0); //34mph go to 1st big turn BEST FOR TIME BEING !
-  // but need retest because it was before the correction with prev_cte ...
-  // but will be the same because Kd was 0 anyway.
- 
-  // pid.Init(0.08, 0.0, 3.0); --> still bad even with prev_cte correction
- 
-  // Next : adjust throttle, try to reduce according to error
-  // then test, if ok, can try to test Kd parameter.
+  // pid.Init(0.075, 0.0, 0.0); 31 s
+  // pid.Init(0.05, 0.0, 0.0); //33s
+  // pid.Init(0.04, 0.0, 0.0); //34s
+  // pid.Init(0.03, 0.0, 0.0); //34mph go to 1st big turn BEST FOR TIME BEING 
+  // pid.Init(0.08, 0.0, 3.0); --> still bad even with prev_cte correction 
   // pid.Init(0.03, 0.0, 0.03); // --> right away to the ditch
-  
-  // BEST SO FAR
-  //pid.Init(0.03, 0.0, 0.0001);  // --> improved, pass 1st turn almost crashed.
-  
+  // pid.Init(0.03, 0.0, 0.0001);  // --> improved, pass 1st turn almost crashed.
   // --> may be need to increase Kd ... try 0.001
-  //pid.Init(0.03, 0.0, 0.001); // nope ...
-  //pid.Init(0.03, 0.0, 0.00001);
-  
+  // pid.Init(0.03, 0.0, 0.001); // nope ...
+  // pid.Init(0.03, 0.0, 0.00001);
   // TRY on integral / Ki param
-  //pid.Init(0.03, 1.0, 0.0001);  //Good but don't go further
+  // pid.Init(0.03, 1.0, 0.0001);  //Good but don't go further
   // pid.Init(0.03, 2.0, 0.0001);  // BETTER, go further !
   // pid.Init(0.03, 3.0, 0.0001); // go futher but then stops
-  
-  //pid.Init(0.03, 2.5, 0.0001);
+  // pid.Init(0.03, 2.5, 0.0001);
   // twiddle.Init(0.03, 2.5, 0.0001); // GOOD !
   
-  //twiddle.Init(0.08, 3, 0.0003);
-  //twiddle.Init(0.08, 2, 0.0000);
-  //twiddle.Init(0.08, 1, 0.0000);
-  //twiddle.Init(0.08, 1, 0.005);
-  //twiddle.Init(0.08, 1, 0.01); BAD
-  twiddle.Init(0.08, 1, 0.001);   // --> best I think, I keep this one.
-
-  //twiddle.Init(0.08, 4, 0.0000);
- 
-
-  //twiddle.Init(0.225, 4, 0.0004);
-  //twiddle.Init(0.2, 3.0, 0.0003);
-  //twiddle.Init(-0.12, -1.2, 0.0);
-  //twiddle.Init(0.12,-2.7, 0.0);
-  pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);  // same as Ki = 3, stops because always cte > 2
-
+  // twiddle.Init(0.08, 3, 0.0003);
+  // twiddle.Init(0.08, 2, 0.0000);
+  // twiddle.Init(0.08, 1, 0.0000);
+  // twiddle.Init(0.08, 1, 0.005);
+  // twiddle.Init(0.08, 1, 0.01); BAD
   
-  //pid.Init(0.02, 0.0, 0.0); //34s
+  twiddle.Init(0.08, 1.0, 0.001);   // --> best I think, I keep this one.
 
-  //pid.Init(0.08 0.0, 0.1,); // out !
-  //pid.Init(0.08, 0.0, 0.05); // out !
+  // twiddle.Init(0.08, 4, 0.0000);
+  // twiddle.Init(0.225, 4, 0.0004);
+  // twiddle.Init(0.2, 3.0, 0.0003);
+  // twiddle.Init(-0.12, -1.2, 0.0);
+  // twiddle.Init(0.12,-2.7, 0.0);
+  pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);  
+  
+  // pid.Init(0.02, 0.0, 0.0); //34s
+  // pid.Init(0.08 0.0, 0.1,); // out !
+  // pid.Init(0.08, 0.0, 0.05); // out !
   // pid.Init(0.08, 0.0, 0.05); // out !
   
   //pid.Init(0.08, 0.0, 0.00025);
   
-  //pid.Init(0.08, 0.0, 3.0); //completely out ...
-  //pid.Init(0.225, 0.0, 4.0); // completely out ...
-  //pid.Init(0.225, 0.0004, 4.0); // completely out....
-  //pid.Init(-0.12, 0.0, -1.2); // completely out ...
-  //pid.Init(0.12, 0.0, -2.7); // completely out ...
-  //pid.Init(0.2, 0.0003, 3.0); // completely out ...
+  // pid.Init(0.08, 0.0, 3.0); //completely out ...
+  // pid.Init(0.225, 0.0, 4.0); // completely out ...
+  // pid.Init(0.225, 0.0004, 4.0); // completely out....
+  // pid.Init(-0.12, 0.0, -1.2); // completely out ...
+  // pid.Init(0.12, 0.0, -2.7); // completely out ...
+  // pid.Init(0.2, 0.0003, 3.0); // completely out ...
 
   // Use auto keyword to avoid typing long 
   // type definitions to get the timepoint 
   // at this instant use function now() 
   auto start = high_resolution_clock::now(); 
   
-  h.onMessage([&pid,&throttle,&start,&prev_cte,&twiddle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
+  h.onMessage([&pid,&start,&prev_cte,&twiddle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -164,22 +148,17 @@ int main() {
            * NOTE: Feel free to play around with the throttle and speed.
            *   Maybe use another PID controller to control the speed!
            */
-          // simulator will provide you the cross track error (CTE) and 
-          // the velocity (mph) in order to compute the appropriate steering angle.
           
-          // Implement first a P controler
           // cover case of first cte reported (prev_cte still 0)
           if(prev_cte == 0){
             // ie first time pass here
             prev_cte = cte;
-          } else if(USE_TWIDDLE){
-            
+          } else if(USE_TWIDDLE){            
             // ie not first time --> use twiddle to test/adjust
             // PID parameters
             twiddle.Run(cte);
-            
             pid.Init(twiddle.p[P], twiddle.p[D], twiddle.p[I]);
-            std::cout << "pid.Init(" << twiddle.p[P] << "," << twiddle.p[D] << "," << twiddle.p[I] << ")" << std::endl;
+            // std::cout << "pid.Init(" << twiddle.p[P] << "," << twiddle.p[D] << "," << twiddle.p[I] << ")" << std::endl;
           }
           
           pid.UpdateControllers(prev_cte,cte);
@@ -188,7 +167,6 @@ int main() {
           
           // After function call, to calculate timing
           auto stop = high_resolution_clock::now(); 
-          
           // Subtract stop and start timepoints and 
           // cast it to required unit. Predefined units 
           // are nanoseconds, microseconds, milliseconds, 
@@ -199,42 +177,22 @@ int main() {
           // member function on the duration object 
           //std::cout << "t=" << duration.count() << "; "<< std::endl; 
           
-          // check steer_value between [-1; +1]
+          // keep steer_value between [-1; +1]
           if((steer_value <-1)||(steer_value >1)){
             std::cout << "ERROR steer_value outside bounds : " << steer_value << std::endl;
             if(steer_value <-1) steer_value = -1;
             if(steer_value >-1) steer_value = +1;
           }
-          
-          // DEBUG
-          // std::cout << "CTE: " << cte << " Steering Value: " << steer_value 
-          //           << std::endl;
 
-          json msgJson;
-          msgJson["steering_angle"] = steer_value;
-
-#if 0
-          // if cte increasing ---> throttle *= 0.9 but bound by 0.1
-          // if cte decreasing --> throttel *= 1.1 but bound by 0.3
-          
-          if(cte > prev_cte){
-            //throttle -= throttle/10;
-            throttle = 0;
-          } else{
-            //throttle += throttle/10;
-            if(cte < 3.0){
-              throttle = 0.3;
-            } else{
-              throttle = 0.1;
-            }
-            if(throttle > 0.3) throttle = 0.3;
-          }
-#endif // 0          
-          msgJson["throttle"] = 0.3;
-          //msgJson["throttle"] = throttle;
-          
           // record prev_cte for next cycle
           prev_cte = cte;
+
+          
+          json msgJson;
+          msgJson["steering_angle"] = steer_value;
+          
+          msgJson["throttle"] = 0.3;
+          
           
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           // std::cout << msg << std::endl;

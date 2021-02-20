@@ -11,6 +11,7 @@
  *        Change prototype UpdateControllers(), add prev_cte
  * v1.2   remove enum Param {P, D, I}; unused now
  *        Change order of parameters in Init(double Kp_, double Kd, double Ki_)
+ * v1.3   Clean comments
  */
 
 
@@ -50,7 +51,7 @@ class PID {
 
  private:
   /**
-   * PID Errors
+   * PID Errors / Controller Coefficients
    */
   double p_controller;
   double i_controller;
@@ -64,7 +65,7 @@ class PID {
   double Kd;
   
   /**
-   * PID previous_cte, int_cte
+   * PID int_cte to store sum of all cte accumulated
    */ 
   double int_cte;
     
