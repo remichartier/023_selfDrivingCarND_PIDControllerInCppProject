@@ -97,7 +97,7 @@ Reflection Criteria | Criteria to meet specifications
 Describe the effect each of the P, I, D components had in your implementation. | Student describes the effect of the P, I, D component of the PID algorithm in their implementation. Is it what you expected? Visual aids are encouraged, i.e. record of a small video of the car in the simulator and describe what each component is set to.
 
 - My final choices for the P/D/I coefficients were respectively (0.08, 1.0, 0.001) as I found through different tests that they were giving me the best results to steer the car for at least one full lap of the simulator track.
-- Having the P coefficient alone (with D and I coefficent set at 0.0) would never be enough due to big steering oscillations occuring when only having P proportional controller activated. The longuer car would drive, the higher the oscillations would be, and inevitable driving the car out of the track.
+- Having the P coefficient alone (with D and I coefficient set at 0.0) would never be enough due to big steering oscillations occurring when only having P proportional controller activated. The longer the car would drive, the higher the oscillations would be, and inevitable driving the car out of the track.
   - Video example : (P = 0.08) cf https://youtu.be/frc_zFagQG0.
 - Adding the D Differential coefficient and controller, with a fine tuned value for the D Coefficient, would help driving the car through the entire lap. It would lower the oscillations of the P controller. The steering error corrections would be more 'calculated', rather than be oscillations as it was for the P controller alone. But those corrections would be rather strong if using only the PD controller and would not be comfortable and not be compatible with a smooth ride.
   - Video example :  (P = 0.08, D = 1.0), cf https://youtu.be/PoJaxTrFcVM.
@@ -105,7 +105,7 @@ Describe the effect each of the P, I, D components had in your implementation. |
   - Video example :  (P = 0.08, D = 1.0, I = 0.001), cf https://youtu.be/L5oF-eXLZpM.
 
 
-That's how I felt the contributions of the coefficients were while testing with different PID coefficient values, most of the impacts of coefficients were expected according to the PID lesson, except that I saw the I coefficient was really finishing the job of keeping the error close to minimum to follow the intented direction / trajectory / expected steering of the car.
+That's how I felt the contributions of the coefficients were while testing with different PID coefficient values, most of the impacts of coefficients were expected according to the PID lesson, except that I saw the I coefficient was really finishing the job of keeping the error close to minimum to follow the intended direction / trajectory / expected steering of the car.
 
 
 Reflection Criteria | Criteria to meet specifications
@@ -115,10 +115,10 @@ Describe how the final hyperparameters were chosen. | Student discusses how they
 - Manual Tuning
   - I started with recommendation I found vie the Mentor Help messages for this project, which were P=0.08, D=3.0. First starting with P=0.08, rest of coefficients at 0. I found it quite good, except that oscillations were driving the car out of the track in about 28s, even reaching the bridge over the lake.
   - Tested P=0.07, P=0.09, did not find them better. 
-  - So I continued by setting D at 3.0, here I could drive the car roughtly for one lap, but still going out of track at first hard curve after the bridge.
+  - So I continued by setting D at 3.0, here I could drive the car rougthly for one lap, but still going out of track at first hard curve after the bridge.
   - Tried adding the I coefficient, did not help.
   - Tried just to make sure with many other coefficient values suggested on Mentor's Help Forum, nothing would fix.
-  - That's were I found that the initial code framework provided is tricky, concerning `void PID::Init(double Kp_, double Ki_, double Kd_)` which place Ki_ input parameter before Kd_ parameter, so that's where mix-up happen between values I wanted to set of Kd, Ki, but which were setting Ki,Kd, ie in inversed order.
+  - That's were I found that the initial code framework provided is tricky, concerning `void PID::Init(double Kp_, double Ki_, double Kd_)` which place Ki_ input parameter before Kd_ parameter, so that's where mix-up happen between values I wanted to set of Kd, Ki, but which were setting Ki,Kd, ie in inverted order.
   - Once I found those issues, I could progressively reach conclusion that P=0.08, D=1.0, I=0.001 was best working for me, trying +/- 1.0 for D and +/- 0.0005 for I.
 
 - Twiddle algorithm : 
